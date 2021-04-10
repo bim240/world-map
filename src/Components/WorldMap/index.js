@@ -11,40 +11,35 @@ import {
 const geoUrl =
   "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 
-const rounded = (num) => {
-  if (num > 1000000000) {
-    return Math.round(num / 100000000) / 10 + "Bn";
-  } else if (num > 1000000) {
-    return Math.round(num / 100000) / 10 + "M";
-  } else {
-    return Math.round(num / 100) / 10 + "K";
-  }
-};
-
 const WorldMap = () => {
+  //   const [showPopover, setShowPopover] = useState("");
   return (
     <>
       <ComposableMap data-tip="" projectionConfig={{ scale: 200 }}>
         <ZoomableGroup>
           <Geographies geography={geoUrl}>
             {({ geographies }) =>
-              geographies.map((geo) => (
+              geographies.map((geo, index) => (
                 <Popover
+                  key={index}
+                  //   visible={geo.properties.NAME === showPopover}
                   content={
                     <MapPopoverContent
-                      trigger="click"
                       country={geo.properties.NAME}
+                      population={geo.properties.POP_EST}
                     />
-                  }
-                  title="Title">
+                  }>
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
                     onMouseEnter={() => {
-                      const { NAME, POP_EST } = geo.properties;
-                      console.log(NAME, "country name");
+                      //   const { NAME, POP_EST } = geo.properties;
+                      //   setShowPopover(NAME);
+                      //   console.log(geo, "country name");
                     }}
-                    onMouseLeave={() => {}}
+                    // onMouseLeave={() => {
+                    //   setShowPopover("");
+                    // }}
                     style={{
                       default: {
                         fill: "#D6D6DA",
