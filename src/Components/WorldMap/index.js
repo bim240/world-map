@@ -1,6 +1,7 @@
 import { Popover } from "antd";
+import CountryEditInfo from "Components/CountryEditModal";
 import MapPopoverContent from "Components/MapTooltip";
-import { memo } from "react";
+import { memo, useState } from "react";
 import {
   ZoomableGroup,
   ComposableMap,
@@ -12,7 +13,11 @@ const geoUrl =
   "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 
 const WorldMap = () => {
-  //   const [showPopover, setShowPopover] = useState("");
+  const [currentInfo, setCurrentInfo] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
   return (
     <>
       <ComposableMap data-tip="" projectionConfig={{ scale: 200 }}>
@@ -32,14 +37,13 @@ const WorldMap = () => {
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
-                    onMouseEnter={() => {
-                      //   const { NAME, POP_EST } = geo.properties;
-                      //   setShowPopover(NAME);
-                      //   console.log(geo, "country name");
+                    onClick={() => {
+                      setCurrentInfo({
+                        country: geo.properties.NAME,
+                        population: geo.properties.POP_EST,
+                      });
+                      toggleModal();
                     }}
-                    // onMouseLeave={() => {
-                    //   setShowPopover("");
-                    // }}
                     style={{
                       default: {
                         fill: "#D6D6DA",
@@ -61,6 +65,13 @@ const WorldMap = () => {
           </Geographies>
         </ZoomableGroup>
       </ComposableMap>
+      {showModal && (
+        <CountryEditInfo
+          {...currentInfo}
+          visible={showModal}
+          toggleModal={toggleModal}
+        />
+      )}
     </>
   );
 };
